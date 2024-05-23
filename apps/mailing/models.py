@@ -27,7 +27,7 @@ class Mailing(models.Model):
     data_mailing_finish = models.DateTimeField(**NULLABLE, verbose_name='Завершение')
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_MAILING, verbose_name='Периодичность')
     client_mailing = models.ManyToManyField(Client, verbose_name='Получатель')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Создатель')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='Создатель')
     status = models.CharField(max_length=9, choices=STATUS_MAILING, verbose_name='Статус')
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Сообщение')
 
