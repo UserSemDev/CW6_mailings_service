@@ -6,7 +6,7 @@ from apps.client.models import Client
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = '__all__'
+        exclude = ('owner',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
