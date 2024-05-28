@@ -6,7 +6,7 @@ from apps.mailing.models import Mailing, Logs
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'data_mailing', 'data_mailing_finish', 'periodicity', 'status',)
-    list_filter = ('status',)
+    list_filter = ('status', 'owner',)
     search_fields = ('name',)
 
 

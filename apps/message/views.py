@@ -1,25 +1,32 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from apps.main.utils import AccessCheckMixin
 from apps.message.forms import MessageForm
 from apps.message.models import Message
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
+    """Контроллер просмотра списка сообщений"""
     model = Message
     extra_context = {'title': 'Сообщения'}
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(owner=self.request.user)
+        user = self.request.user
+        if not user.is_superuser:
+            queryset = queryset.filter(owner=user)
         return queryset
 
 
-class MessageDetailView(DetailView):
+class MessageDetailView(LoginRequiredMixin, AccessCheckMixin, DetailView):
+    """Контроллер просмотра одного сообщения"""
     model = Message
     extra_context = {'title': 'Информация о сообщении'}
 
 
-class MessageCreateView(CreateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
+    """Контроллер создания сообщения"""
     model = Message
     form_class = MessageForm
     extra_context = {'title': 'Создание сообщения'}
@@ -32,7 +39,8 @@ class MessageCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MessageUpdateView(UpdateView):
+class MessageUpdateView(LoginRequiredMixin, AccessCheckMixin, UpdateView):
+    """Контроллер редактирования сообщения"""
     model = Message
     form_class = MessageForm
     extra_context = {'title': 'Редактирование сообщения'}
@@ -41,7 +49,8 @@ class MessageUpdateView(UpdateView):
         return reverse('messages:message_detail', args=[self.kwargs.get('pk')])
 
 
-class MessageDeleteView(DeleteView):
+class MessageDeleteView(LoginRequiredMixin, AccessCheckMixin, DeleteView):
+    """Контроллер удаления сообщения"""
     model = Message
     extra_context = {'title': 'Удаление сообщения'}
     success_url = reverse_lazy('messages:message_list')

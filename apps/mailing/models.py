@@ -28,7 +28,7 @@ class Mailing(models.Model):
     data_mailing_finish = models.DateTimeField(default=timezone.now() + timedelta(days=365), verbose_name='Дата завершения')
     periodicity = models.CharField(default=PeriodicityOfMailing.ONCE_TIME, choices=PeriodicityOfMailing, verbose_name='Периодичность')
     client_mailing = models.ManyToManyField(Client, verbose_name='Получатели')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='Создатель')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='Создатель')
     status = models.CharField(default=StatusOfMailing.CREATED, choices=StatusOfMailing, verbose_name='Статус')
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Сообщение')
 
@@ -38,6 +38,10 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
+        permissions = [
+            ('set_deactivate', 'Can deactivate mailing'),
+            ('view_all_mailing', 'Can view all mailing'),
+        ]
 
 
 class Logs(models.Model):

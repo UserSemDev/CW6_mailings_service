@@ -1,14 +1,10 @@
 from django import forms
-
 from apps.client.models import Client
+from apps.main.utils import StyleFormMixin
 
 
-class ClientForm(forms.ModelForm):
+class ClientForm(StyleFormMixin, forms.ModelForm):
+    """Форма создания и редактирования клиента"""
     class Meta:
         model = Client
         exclude = ('owner',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for fields_name, field in self.fields.items():
-            field.widget.attrs['class'] = "form-control"
