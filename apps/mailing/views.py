@@ -6,6 +6,7 @@ from apps.client.models import Client
 from apps.mailing.forms import MailingForm, ManagerMailingForm
 from apps.mailing.models import Mailing, Logs
 from apps.main.utils import AccessCheckMixin
+from apps.message.models import Message
 
 
 class MailingListView(LoginRequiredMixin, ListView):
@@ -44,6 +45,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['client_mailing'].queryset = Client.objects.filter(owner=self.request.user)
+        form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
         return form
 
     def form_valid(self, form):

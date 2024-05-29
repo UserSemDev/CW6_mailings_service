@@ -3,10 +3,9 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from apps.client.models import Client
+from apps.main.utils import NULLABLE
 from apps.message.models import Message
 from django.utils.translation import gettext as _
-
-NULLABLE = {'blank': True, 'null': True}
 
 
 class Mailing(models.Model):

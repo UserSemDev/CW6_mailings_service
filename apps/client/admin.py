@@ -4,7 +4,7 @@ from apps.client.models import Client
 
 
 @admin.register(Client)
-class MailingAdmin(admin.ModelAdmin):
+class ClientAdmin(admin.ModelAdmin):
     list_display = ('id', 'firstname', 'lastname', 'surname', 'email',)
     list_filter = ('owner',)
     search_fields = ('email',)

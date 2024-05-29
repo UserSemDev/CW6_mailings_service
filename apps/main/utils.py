@@ -1,5 +1,10 @@
+import random
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 from django.forms import BooleanField
+from apps.blog.models import Article
+
+NULLABLE = {'blank': True, 'null': True}
 
 
 class StyleFormMixin:
@@ -21,3 +26,16 @@ class AccessCheckMixin:
         if not user.is_superuser and user != self.object.owner:
             raise PermissionDenied
         return self.object
+
+
+def get_random_articles(count: int) -> list:
+    queryset_count = Article.objects.aggregate(count=Count('id'))['count']
+
+    if queryset_count == 0:
+        random_articles = []
+    elif count >= queryset_count:
+        random_articles = list(Article.objects.all())
+    else:
+        random_indexes = random.sample(range(queryset_count), count)
+        random_articles = [Article.objects.all()[index] for index in random_indexes]
+    return random_articles

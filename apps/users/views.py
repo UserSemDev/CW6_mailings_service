@@ -106,7 +106,10 @@ class UserListView(PermissionRequiredMixin, ListView):
     extra_context = {'title': 'Список пользователей'}
 
     def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).exclude(pk=self.request.user.pk).exclude(is_superuser=True)
+        user = self.request.user
+        if user.is_superuser:
+            return super().get_queryset(*args, **kwargs).exclude(pk=self.request.user.pk).exclude(is_superuser=True)
+        return super().get_queryset(*args, **kwargs).exclude(pk=self.request.user.pk).exclude(is_superuser=True).exclude(is_staff=True)
 
 
 @permission_required('users.set_user_deactivate')
