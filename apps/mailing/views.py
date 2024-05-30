@@ -44,8 +44,9 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['client_mailing'].queryset = Client.objects.filter(owner=self.request.user)
-        form.fields['message'].queryset = Message.objects.filter(owner=self.request.user)
+        user = self.request.user
+        form.fields['client_mailing'].queryset = Client.objects.filter(owner=user)
+        form.fields['message'].queryset = Message.objects.filter(owner=user)
         return form
 
     def form_valid(self, form):
@@ -68,7 +69,8 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         form = super().get_form(form_class)
         user = self.request.user
         if user == self.object.owner or user.is_superuser:
-            form.fields['client_mailing'].queryset = Client.objects.filter(owner=self.object.owner)
+            form.fields['client_mailing'].queryset = Client.objects.filter(owner=user)
+            form.fields['message'].queryset = Message.objects.filter(owner=user)
         return form
 
     def get_form_class(self):
@@ -113,6 +115,6 @@ class LogListView(LoginRequiredMixin, ListView):
     def dispatch(self, request, *args, **kwargs):
         mailing_pk = self.kwargs.get('mailing_pk')
         user = self.request.user
-        if not user.is_superuser and not Mailing.objects.filter(pk=mailing_pk, owner=self.request.user).exists():
+        if not user.is_superuser and not Mailing.objects.filter(pk=mailing_pk, owner=user).exists():
             raise PermissionDenied
         return super().dispatch(request, args, **kwargs)

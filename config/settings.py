@@ -162,7 +162,7 @@ CRONJOBS = [
     ('*/1 * * * *', 'apps.crontab.cron.scheduled_mailing')
 ]
 
-CACHE_ENABLED = os.getenv('CACHE_ENABLED')
+CACHE_ENABLED = (os.getenv('CACHE_ENABLED', 'False') == 'True')
 
 if CACHE_ENABLED:
     CACHES = {
