@@ -12,6 +12,10 @@ python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.9.9"
 pillow = "^10.3.0"
 pytils = "^0.4.1"
+ipython = "^8.24.0"
+django-crontab = "^0.7.1"
+redis = "^5.0.4"
+poetry-plugin-export = "^1.8.0"
 
 
 [build-system]
