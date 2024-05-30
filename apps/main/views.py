@@ -1,9 +1,8 @@
 from django.views.generic import TemplateView
-
 from apps.blog.models import Article
 from apps.client.models import Client
 from apps.mailing.models import Mailing
-from apps.main.utils import get_random_articles
+from apps.main.utils import get_random_articles_from_cache
 
 
 class IndexView(TemplateView):
@@ -19,5 +18,5 @@ class IndexView(TemplateView):
         context['articles_random'] = Article.objects.all()
         context['count_client'] = clients.count()
         context['count_client_unique'] = clients.values('email').distinct().count()
-        context['object_list'] = get_random_articles(3)
+        context['object_list'] = get_random_articles_from_cache(3)
         return context
